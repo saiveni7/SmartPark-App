@@ -4,6 +4,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN chmod +x mvnw && ./mvnw clean package -DskipTestsgit add backend/Dockerfile
+RUN chmod +x mvnw && ./mvnw clean package -DskipTests
 
 CMD ["java","-jar","target/*.jar"]
