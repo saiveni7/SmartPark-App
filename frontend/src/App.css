@@ -1,3 +1,30 @@
+/* ================= GLOBAL ================= */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: #0f172a;
+  border-bottom: 1px solid #334155;
+}
+
+.navbar h2 {
+  color: #38bdf8;
+}
+
+.navbar button {
+  margin-left: 10px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #1e293b;
+  color: white;
+}
+
+.navbar .logout {
+  background: red;
+}
 * {
   margin: 0;
   padding: 0;
@@ -5,41 +32,55 @@
   font-family: "Segoe UI", sans-serif;
 }
 
-/* ===================== HOME ===================== */
+body {
+  background: #0f172a;
+  color: white;
+}
+
+/* ================= HOME ================= */
 .home-bg {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  background: radial-gradient(circle at top, #1e3c72, #0f172a);
 }
 
 .home-card {
   text-align: center;
-  color: white;
+  padding: 40px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.8s ease-in-out;
 }
 
 .home-card h1 {
-  font-size: 40px;
+  font-size: 42px;
   margin-bottom: 10px;
+}
+
+.home-card p {
+  opacity: 0.8;
 }
 
 .home-card button {
   margin-top: 20px;
-  padding: 12px 25px;
+  padding: 12px 30px;
   border: none;
-  border-radius: 10px;
-  background: #ffcc00;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ffcc00, #ff8800);
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
 }
 
 .home-card button:hover {
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
-/* ===================== LOGIN ===================== */
+/* ================= LOGIN ================= */
 .login-bg {
   height: 100vh;
   display: flex;
@@ -49,178 +90,129 @@
 }
 
 .login-card {
-  background: white;
+  width: 340px;
   padding: 30px;
-  border-radius: 15px;
-  width: 320px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  animation: slideUp 0.6s ease-in-out;
 }
 
 .login-card h2 {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .login-card input {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   margin: 10px 0;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: none;
+  border-radius: 10px;
+  outline: none;
 }
 
 .login-card button {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
+  margin-top: 10px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   background: #4f46e5;
   color: white;
+  font-weight: bold;
   cursor: pointer;
+  transition: 0.3s;
 }
 
 .login-card button:hover {
-  background: #4338ca;
+  background: #3730a3;
 }
 
-/* ===================== APP LAYOUT ===================== */
-.app-layout {
-  display: flex;
-  height: 100vh;
-  background: #f4f6f9;
-}
-
-/* ===================== SIDEBAR ===================== */
-.sidebar {
-  width: 240px;
-  background: #111827;
-  color: white;
+/* ================= DASHBOARD ================= */
+.container {
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }
 
-.sidebar h2 {
-  font-size: 20px;
-  margin-bottom: 10px;
-}
-
-.sidebar p {
-  color: #9ca3af;
-}
-
-.sidebar button {
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  background: #2563eb;
-  color: white;
-  transition: 0.3s;
-}
-
-.sidebar button:hover {
-  background: #1d4ed8;
-}
-
-/* ===================== MAIN ===================== */
-.main {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-.main h1 {
-  margin-bottom: 15px;
-  color: #111827;
-}
-
-/* ===================== STATS ===================== */
-.stats {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.stats div {
-  flex: 1;
-  background: white;
-  padding: 15px;
-  border-radius: 12px;
+.container h1 {
   text-align: center;
-  font-weight: bold;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  transition: 0.3s;
+  margin-bottom: 20px;
+  color: #38bdf8;
 }
 
-.stats div:hover {
-  transform: translateY(-3px);
-}
-
-/* ===================== ADMIN BOX ===================== */
-.admin-box {
-  background: white;
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 15px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-}
-
-.admin-box button {
-  background: #10b981;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-/* ===================== SLOT GRID ===================== */
+/* ================= SLOT GRID ================= */
 .slots {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+  padding: 10px;
 }
 
-/* ===================== CARD ===================== */
+/* ================= CARD ================= */
 .card {
-  background: white;
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 18px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
   transition: 0.3s;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 .card:hover {
-  transform: scale(1.03);
+  transform: translateY(-5px);
 }
 
+/* AVAILABLE */
 .available {
   border-left: 6px solid #22c55e;
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
 }
 
+/* BOOKED */
 .booked {
   border-left: 6px solid #ef4444;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
 }
 
-/* ===================== BUTTONS ===================== */
+/* BUTTONS */
 button {
-  margin-top: 8px;
-  padding: 8px;
+  margin-top: 10px;
+  padding: 8px 12px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   transition: 0.2s;
 }
 
 button:hover {
-  opacity: 0.9;
+  opacity: 0.85;
 }
+
+/* BOOK BUTTON */
+.card button:first-of-type {
+  background: #22c55e;
+  color: white;
+}
+
+/* CANCEL BUTTON */
+.card button:last-of-type {
+  background: #ef4444;
+  color: white;
+}
+
+/* DISABLED */
+button:disabled {
+  background: gray;
+  cursor: not-allowed;
+}
+
+/* ================= ANIMATIONS ================= */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(15px);
   }
   to {
     opacity: 1;
@@ -228,36 +220,13 @@ button:hover {
   }
 }
 
-@keyframes pulseGreen {
-  0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.6); }
-  70% { box-shadow: 0 0 0 10px rgba(34,197,94,0); }
-  100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
-}
-
-@keyframes pulseRed {
-  0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.6); }
-  70% { box-shadow: 0 0 0 10px rgba(239,68,68,0); }
-  100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
-}
-
-/* SLOT CARD ANIMATION */
-.card {
-  animation: fadeIn 0.4s ease-in-out;
-}
-
-/* AVAILABLE SLOT ANIMATION */
-.available {
-  border-left: 6px solid #22c55e;
-  animation: pulseGreen 2s infinite;
-}
-
-/* BOOKED SLOT ANIMATION */
-.booked {
-  border-left: 6px solid #ef4444;
-  animation: pulseRed 2s infinite;
-}
-
-/* WHEN STATUS CHANGES (smooth effect) */
-.card {
-  transition: all 0.3s ease-in-out;
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -18,6 +18,7 @@ public class AuthController {
 
         Map<String, String> response = new HashMap<>();
 
+        // SIMPLE HARDCODED LOGIN (for project)
         if (username.equals("admin") && password.equals("admin123")) {
             response.put("status", "success");
             response.put("role", "ADMIN");

@@ -1,36 +1,35 @@
 import { useState } from "react";
-import "./App.css";
 
 function Login({ onLogin }) {
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-
-    fetch("https://YOUR-BACKEND-URL.onrender.com/auth/login", {
+    fetch("http://localhost:8080/auth/login", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
     })
-      .then(res => res.json())
-      .then(data => {
-        console.log("LOGIN RESPONSE:", data);
-
+      .then((res) => res.json())
+      .then((data) => {
         if (data.status === "success") {
-          onLogin(data.role);
+          alert("Login Successful!");
+          onLogin(data.role);   // 👈 role send to App.jsx
         } else {
           alert("Invalid Credentials");
         }
-
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("Server Error");
       });
   };
 
   return (
     <div className="login-bg">
-
       <div className="login-card">
-
         <h2>🔐 SmartPark Login</h2>
 
         <input
@@ -44,12 +43,8 @@ function Login({ onLogin }) {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button onClick={handleLogin}>
-          Login
-        </button>
-
+        <button onClick={handleLogin}>Login</button>
       </div>
-
     </div>
   );
 }

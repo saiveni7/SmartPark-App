@@ -1,363 +1,194 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import Home from "./Home";
 import Login from "./Login";
+import Home from "./Home";
 
 function App() {
-
   const [page, setPage] = useState("home");
+  const [role, setRole] = useState(""); // admin / user
   const [slots, setSlots] = useState([]);
-  const [role, setRole] = useState("");
+  const [newSlot, setNewSlot] = useState("");
 
-  const API_URL = "https://YOUR-BACKEND-URL.onrender.com";
+  // ✅ DEBUG: ROLE TRACKING (IMPORTANT)
+  useEffect(() => {
+    console.log("🔥 ROLE UPDATED:", role);
+  }, [role]);
 
   // LOAD SLOTS
   const loadSlots = () => {
-    fetch(`${API_URL}/slots`)
-      .then(res => res.json())
-      .then(data => setSlots(data))
-      .catch(err => console.log("Load error:", err));
+    fetch("http://localhost:8080/slots")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("📦 SLOTS LOADED:", data);
+        setSlots(data);
+      })
+      .catch((err) => console.log("❌ SLOT LOAD ERROR:", err));
   };
 
-
   useEffect(() => {
-    if (page === "dashboard" || page === "admin") {
+    if (page === "dashboard") {
       loadSlots();
     }
   }, [page]);
 
-
   // LOGIN
   const handleLogin = (userRole) => {
-    setRole(userRole);
+  const normalizedRole = userRole.toLowerCase(); // 🔥 FIX
 
-    if (userRole === "ADMIN") {
-      setPage("admin");
-    } else {
-      setPage("dashboard");
-    }
-  };
+  console.log("🚀 LOGIN ROLE RECEIVED:", normalizedRole);
 
+  setRole(normalizedRole);
+  setPage("dashboard");
+};
 
   // LOGOUT
   const logout = () => {
     setRole("");
-    setPage("login");
+    setPage("home");
   };
 
-
-  // BOOK SLOT
+  // BOOK SLOT (USER ONLY)
   const bookSlot = (slot) => {
-
-    fetch(`${API_URL}/slots/${slot.id}`, {
+    fetch(`http://localhost:8080/slots/${slot.id}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...slot,
         status: "BOOKED",
         vehicleNumber: "AP09AB1234",
-        userName: "Sai"
-      })
+        userName: "User",
+      }),
     })
-    .then(() => loadSlots());
-
+      .then(() => loadSlots())
+      .catch((err) => console.log("BOOK ERROR:", err));
   };
 
-
-  // CANCEL SLOT
+  // CANCEL SLOT (ADMIN ONLY)
   const cancelSlot = (slot) => {
-
-    fetch(`${API_URL}/slots/cancel/${slot.id}`, {
-      method: "PUT"
+    fetch(`http://localhost:8080/slots/cancel/${slot.id}`, {
+      method: "PUT",
     })
-    .then(() => loadSlots());
-
+      .then(() => loadSlots())
+      .catch((err) => console.log("CANCEL ERROR:", err));
   };
 
-
-  // ADD SLOT
+  // ADD SLOT (ADMIN ONLY)
   const addSlot = () => {
+    if (!newSlot) {
+      alert("Enter slot number");
+      return;
+    }
 
-    const slotNumber = prompt("Enter Slot Number:");
-
-    if (!slotNumber) return;
-
-
-    fetch(`${API_URL}/slots`, {
-
+    fetch("http://localhost:8080/slots", {
       method: "POST",
-
-      headers: {
-        "Content-Type": "application/json"
-      },
-
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        slotNumber
-      })
-
+        slotNumber: newSlot,
+        status: "AVAILABLE",
+      }),
     })
-    .then(() => loadSlots());
-
+      .then(() => {
+        setNewSlot("");
+        loadSlots();
+      })
+      .catch((err) => console.log("ADD SLOT ERROR:", err));
   };
 
-
-
-  // HOME
+  // ---------------- HOME ----------------
   if (page === "home") {
     return <Home onStart={() => setPage("login")} />;
   }
 
-
-  // LOGIN
+  // ---------------- LOGIN ----------------
   if (page === "login") {
     return <Login onLogin={handleLogin} />;
   }
 
-
-
-  // ADMIN
-  if (page === "admin") {
-
-    return (
-
-      <div className="app-layout">
-
-        <div className="sidebar">
-
-          <h2>👨‍💼 Admin Panel</h2>
-
-          <p>Welcome {role}</p>
-
-          <button onClick={() => setPage("dashboard")}>
-            ⬅ Back
-          </button>
-
-          <button onClick={logout}>
-            Logout
-          </button>
-
-        </div>
-
-
-
-        <div className="main">
-
-          <h1>Admin Dashboard</h1>
-
-
-          <div className="stats">
-
-            <div>
-              🚗 Total
-              <br />
-              {slots.length}
-            </div>
-
-            <div>
-              🔴 Booked
-              <br />
-              {slots.filter(s => s.status === "BOOKED").length}
-            </div>
-
-
-            <div>
-              🟢 Available
-              <br />
-              {slots.filter(s => s.status === "AVAILABLE").length}
-            </div>
-
-          </div>
-
-
-
-          <div className="admin-box">
-
-            <button onClick={addSlot}>
-              ➕ Add Slot
-            </button>
-
-          </div>
-
-
-
-
-          <div className="slots">
-
-            {slots.map(slot => (
-
-              <div key={slot.id} className="card">
-
-                <h3>{slot.slotNumber}</h3>
-
-                <p>Status: {slot.status}</p>
-
-
-                <button onClick={() => cancelSlot(slot)}>
-                  Reset Slot
-                </button>
-
-
-              </div>
-
-            ))}
-
-          </div>
-
-
-        </div>
-
-      </div>
-
-    );
-
-  }
-
-
-
-  // DASHBOARD
-
+  // ---------------- DASHBOARD ----------------
   return (
+    <div className="dashboard">
 
-    <div className="app-layout">
-
-
-      <div className="sidebar">
-
+      {/* NAVBAR */}
+      <div className="navbar">
         <h2>🚗 SmartPark</h2>
 
-        <p>Welcome {role}</p>
-
-
-
-        {role === "ADMIN" && (
-
-          <button onClick={() => setPage("admin")}>
-
-            👨‍💼 Admin Panel
-
+        <div>
+          <button onClick={() => setPage("dashboard")}>Dashboard</button>
+          <button onClick={logout} style={{ background: "red" }}>
+            Logout
           </button>
-
-        )}
-
-
-        <button onClick={logout}>
-          Logout
-        </button>
-
-
+        </div>
       </div>
 
-
-
-
-
-      <div className="main">
-
-
-        <h1>Parking Dashboard</h1>
-
-
-        <div className="stats">
-
-
-          <div>
-            🚗 Total
-            <br />
-            {slots.length}
-          </div>
-
-
-          <div>
-            🔴 Booked
-            <br />
-            {slots.filter(s => s.status === "BOOKED").length}
-          </div>
-
-
-          <div>
-            🟢 Available
-            <br />
-            {slots.filter(s => s.status === "AVAILABLE").length}
-          </div>
-
-
-        </div>
-
-
-
-
-
-        <div className="slots">
-
-
-          {slots.map(slot => (
-
-
-            <div
-              key={slot.id}
-              className={`card ${
-                slot.status === "AVAILABLE"
-                ? "available"
-                : "booked"
-              }`}
-            >
-
-
-              <h3>{slot.slotNumber}</h3>
-
-
-              <p>Status: {slot.status}</p>
-
-
-              <p>
-                Vehicle: {slot.vehicleNumber || "No Vehicle"}
-              </p>
-
-
-
-              {
-                slot.status === "AVAILABLE" ?
-
-                (
-
-                  <button onClick={() => bookSlot(slot)}>
-                    Book Slot
-                  </button>
-
-                )
-
-                :
-
-                (
-
-                  <button onClick={() => cancelSlot(slot)}>
-                    Cancel
-                  </button>
-
-                )
-
-              }
-
-
-            </div>
-
-
-          ))}
-
-
-        </div>
-
-
+      {/* ROLE SHOW (IMPORTANT DEBUG UI) */}
+      <div style={{ padding: "10px", color: "blue" }}>
+        Current Role: <b>{role || "NOT SET"}</b>
       </div>
 
+      {/* ADMIN PANEL */}
+      {role === "admin" && (
+        <div className="admin-box">
+          <h3>👨‍💼 Admin Panel</h3>
 
+          <input
+            placeholder="Enter Slot Number"
+            value={newSlot}
+            onChange={(e) => setNewSlot(e.target.value)}
+          />
+
+          <button onClick={addSlot}>➕ Add Slot</button>
+        </div>
+      )}
+
+      {/* STATS */}
+      <div className="stats">
+        <div>Total: {slots.length}</div>
+        <div>
+          Available: {slots.filter((s) => s.status === "AVAILABLE").length}
+        </div>
+        <div>
+          Booked: {slots.filter((s) => s.status === "BOOKED").length}
+        </div>
+      </div>
+
+      {/* SLOTS */}
+      <div className="slots">
+        {slots.map((slot) => (
+          <div
+            key={slot.id}
+            className={`card ${
+              slot.status === "AVAILABLE" ? "available" : "booked"
+            }`}
+          >
+            <h2>{slot.slotNumber}</h2>
+            <p>Status: {slot.status}</p>
+
+            {slot.status === "BOOKED" && (
+              <p>Vehicle: {slot.vehicleNumber}</p>
+            )}
+
+            {/* USER VIEW */}
+            {role === "user" && (
+              <>
+                {slot.status === "AVAILABLE" ? (
+                  <button onClick={() => bookSlot(slot)}>Book Slot</button>
+                ) : (
+                  <button disabled>Booked</button>
+                )}
+              </>
+            )}
+
+            {/* ADMIN VIEW */}
+            {role === "admin" && slot.status === "BOOKED" && (
+              <button onClick={() => cancelSlot(slot)}>
+                Cancel Booking
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
-
   );
-
 }
-
 
 export default App;
